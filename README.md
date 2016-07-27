@@ -5,6 +5,10 @@
 
 GoDiffExporter was made to be a simple tool that will parse DIFF files and export to some formats made with Go (Golang).
 
+# Formats
+
+Today this tool support PDF format when export.
+
 # How to use
 
 You can execute on your terminal/console the simple command:
