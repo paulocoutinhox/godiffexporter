@@ -46,7 +46,6 @@ func main() {
 	pdf.SetFontLocation(os.Getenv("GOPATH") + "src/github.com/prsolucoes/godiffexporter/fonts")
 	pdf.AddFont("Helvetica-1251", "", "helvetica_1251.json")
 	pdf.AddFont("Menlo", "", "Menlo-Regular.json")
-	pdf.AddFont("Menlo", "B", "Menlo-Bold.json")
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
 
 	// title
@@ -74,7 +73,7 @@ func main() {
 				fmt.Printf("| File: %v\n", file.OrigName)
 			}
 
-			pdf.SetFont("Menlo", "B", 11)
+			pdf.SetFont("Helvetica", "B", 11)
 			pdf.SetFillColor(222, 222, 222)
 			pdf.MultiCell(0, 11, "File: " + tr(file.OrigName), "1", "L", true)
 		} else {
@@ -83,7 +82,7 @@ func main() {
 				fmt.Printf("| To File: %v\n", file.NewName)
 			}
 
-			pdf.SetFont("Menlo", "B", 11)
+			pdf.SetFont("Helvetica", "B", 11)
 			pdf.SetFillColor(222, 222, 222)
 			pdf.MultiCell(0, 11, "Renamed file: " + tr(file.OrigName), "1", "L", true)
 			pdf.MultiCell(0, 11, "To file: " + tr(file.NewName), "1", "L", true)
