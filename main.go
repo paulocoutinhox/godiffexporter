@@ -96,15 +96,29 @@ func main() {
 			newRange := hunk.NewRange
 			oldRange := hunk.OrigRange
 
-			currentLine := -1
+			currentLineNumber := -1
+			currentLineContent := ""
 
 			for _, lineOld := range oldRange.Lines {
-				currentLine = lineOld.Number
-				exportLineToPDF(pdf, lineOld)
+				currentLineNumber = lineOld.Number
+
+				if lineOld.Mode == diffparser.ADDED || lineOld.Mode == diffparser.REMOVED {
+					exportLineToPDF(pdf, lineOld)
+					currentLineContent = lineOld.Content
+				} else if lineOld.Mode == diffparser.UNCHANGED && currentLineContent != lineOld.Content {
+					exportLineToPDF(pdf, lineOld)
+					currentLineContent = lineOld.Content
+				}
 
 				for _, lineNew := range newRange.Lines {
-					if lineNew.Number <= lineOld.Number && lineNew.Number >= currentLine {
-						exportLineToPDF(pdf, lineNew)
+					if lineNew.Number <= lineOld.Number && lineNew.Number >= currentLineNumber {
+						if lineNew.Mode == diffparser.ADDED || lineNew.Mode == diffparser.REMOVED {
+							exportLineToPDF(pdf, lineNew)
+							currentLineContent = lineNew.Content
+						} else if lineNew.Mode == diffparser.UNCHANGED && currentLineContent != lineNew.Content {
+							exportLineToPDF(pdf, lineNew)
+							currentLineContent = lineNew.Content
+						}
 					}
 				}
 			}
