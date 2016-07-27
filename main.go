@@ -45,6 +45,7 @@ func main() {
 	pdf.AddPage()
 	pdf.SetFontLocation(os.Getenv("GOPATH") + "src/github.com/prsolucoes/godiffexporter/fonts")
 	pdf.AddFont("Helvetica-1251", "", "helvetica_1251.json")
+	pdf.AddFont("Menlo-Regular", "", "Menlo-Regular.json")
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
 
 	// title
@@ -97,30 +98,19 @@ func main() {
 			oldRange := hunk.OrigRange
 
 			currentLineNumber := -1
-			currentLineContent := ""
 
-			for _, lineOld := range oldRange.Lines {
-				currentLineNumber = lineOld.Number
+			for _, lineNew := range newRange.Lines {
+				currentLineNumber = lineNew.Number
 
-				if lineOld.Mode == diffparser.ADDED || lineOld.Mode == diffparser.REMOVED {
-					exportLineToPDF(pdf, lineOld)
-					currentLineContent = lineOld.Content
-				} else if lineOld.Mode == diffparser.UNCHANGED && currentLineContent != lineOld.Content {
-					exportLineToPDF(pdf, lineOld)
-					currentLineContent = lineOld.Content
-				}
-
-				for _, lineNew := range newRange.Lines {
-					if lineNew.Number <= lineOld.Number && lineNew.Number >= currentLineNumber {
-						if lineNew.Mode == diffparser.ADDED || lineNew.Mode == diffparser.REMOVED {
-							exportLineToPDF(pdf, lineNew)
-							currentLineContent = lineNew.Content
-						} else if lineNew.Mode == diffparser.UNCHANGED && currentLineContent != lineNew.Content {
-							exportLineToPDF(pdf, lineNew)
-							currentLineContent = lineNew.Content
+				for _, lineOld := range oldRange.Lines {
+					if lineOld.Number == currentLineNumber {
+						if lineOld.Mode == diffparser.REMOVED {
+							exportLineToPDF(pdf, lineOld)
 						}
 					}
 				}
+
+				exportLineToPDF(pdf, lineNew)
 			}
 		}
 	}
@@ -136,7 +126,7 @@ func main() {
 
 func exportLineToPDF(pdf *gofpdf.Fpdf, line *diffparser.DiffLine) {
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
-	pdf.SetFont("Helvetica", "", 10)
+	pdf.SetFont("Menlo-Regular", "", 9)
 	prefix := ""
 
 	if line.Mode == diffparser.ADDED {
@@ -162,5 +152,5 @@ func exportLineToPDF(pdf *gofpdf.Fpdf, line *diffparser.DiffLine) {
 		prefix = "  "
 	}
 
-	pdf.MultiCell(0, 10, tr("(" + strconv.Itoa(line.Number) + ") " + prefix + line.Content), "1", "L", true)
+	pdf.MultiCell(0, 8, tr("(" + strconv.Itoa(line.Number) + ") " + prefix + line.Content), "1", "L", true)
 }
