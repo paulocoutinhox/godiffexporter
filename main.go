@@ -6,10 +6,10 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/jung-kurt/gofpdf"
+	"github.com/prsolucoes/gofpdf"
 	"github.com/waigani/diffparser"
-	"os"
 	"strconv"
+	"github.com/prsolucoes/godiffexporter/fonts"
 )
 
 var (
@@ -43,9 +43,9 @@ func main() {
 
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
-	pdf.SetFontLocation(os.Getenv("GOPATH") + "src/github.com/prsolucoes/godiffexporter/fonts")
-	pdf.AddFont("Helvetica-1251", "", "helvetica_1251.json")
-	pdf.AddFont("Menlo", "", "Menlo-Regular.json")
+	//pdf.SetFontLocation(os.Getenv("GOPATH") + "src/github.com/prsolucoes/godiffexporter/fonts")
+	pdf.AddFontFromBytes("Helvetica-1251", "", fonts.MustAsset("fonts/helvetica_1251.json"), fonts.MustAsset("fonts/helvetica_1251.z"))
+	pdf.AddFontFromBytes("Menlo", "", fonts.MustAsset("fonts/Menlo-Regular.json"), fonts.MustAsset("fonts/Menlo-Regular.z"))
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
 
 	// title
