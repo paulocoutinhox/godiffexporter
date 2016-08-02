@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/prsolucoes/gofpdf"
+	"github.com/jung-kurt/gofpdf"
 	"github.com/waigani/diffparser"
 	"strconv"
 	"github.com/prsolucoes/godiffexporter/fonts"
